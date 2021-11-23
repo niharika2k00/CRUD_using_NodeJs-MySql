@@ -1,8 +1,7 @@
 
 import express from 'express';
 import dotenv from 'dotenv';
-import mysql from 'mysql2';
-// import ConnectDB from './config/DB.js';
+import ConnectDB from './DbConnection/DB.js';
 // import Choco_routes from './Routes/Choco_routes.js';
 
 
@@ -10,7 +9,7 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 8000;
 app.use(express.json());
-// ConnectDB();
+ConnectDB();
 
 
 // app.get(endpoint, callback)
@@ -19,22 +18,6 @@ app.get('/', (req, res) => {
 })
 
 
-// CREATE CONNECTION TO THE DATABASE
-const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'niharika#28',
-    database: 'practiseDatabase',
-    // port: 6900,
-    // multipleStatements: true, // Prevent nested sql statements
-    // connectTimeout: 60 * 60 * 1000,
-    // debug: true,
-});
-
-db.connect(err => {
-    if (err) throw err;
-    console.log("MySQL Database connected successfully ...");
-})
 
 
 // CREATE DB
@@ -62,7 +45,7 @@ app.get('/createUsersTable', (req, res) => {
 
 
 // INSERT DATA ---- POST REQUEST 
-app.get('/addpost', (req, res) => {
+/* app.get('/addpost', (req, res) => {
     let post = { name: 'niharika', title: 'post 1 created' };
     let aa = 'INSERT INTO Users SET ?';
     let query = db.query(aa, post, (err, result) => {
@@ -71,13 +54,23 @@ app.get('/addpost', (req, res) => {
         res.status(200);
         res.send('added ');
     });
-})
+}) */
 
-app.get('/createUsersTable22', async (req, res) => {
-    let query = 'create table Userss ( ID INT AUTO_INCREMENT not null, NAME varchar(50) , EMAIL varchar(50) ,DOB datetime , GENDER varchar(50) , ADDRESS longtext  )';
-    var result = await db.execute(query);
-    if (!result)
-        throw new ErrorHandler(500, req, res, 'Users Table Not Created Success', err);
+app.get('/addpost', async (req, res) => {
+    try {
+        // let query = 'INSERT INTO Users SET `name`=? , `title`=? ';
+        let query = 'INSERT INTO Users SET  name = ? ,  title = ? ';
+        var result = await db.execute(query, ['niharika', '23/11 created']);
+        // if (!result)
+        // throw new ErrorHandler(500, req, res, 'Users Table Not Created Success', err);
+
+        console.log(result);
+        res.status(200);
+        res.send('added lalalalalaaaa.......... ');
+    }
+    catch (err) {
+        console.log(err);
+    }
 });
 
 // SYNTAX: app.use(path, callback)
