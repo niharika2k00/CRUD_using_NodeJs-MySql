@@ -50,9 +50,7 @@ app.use('/api', userRoutes);
 
 
 // listen() function ---->  used to bind and listen the connections on the specified host and port
-// app.listen(port, () => console.log(`Server Connected in ${port} for ${process.env.NODE_ENV}`));
-
 app.listen(port, function () {
-    console.log(`App listening at http://localhost:${port}`);
+    console.log(`App listening at http://localhost:${port} for ${process.env.NODE_ENV}`);
     console.log(process.env.PORT);
 })
