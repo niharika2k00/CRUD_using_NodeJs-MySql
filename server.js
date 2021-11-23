@@ -1,7 +1,9 @@
 
 import express from 'express';
 import dotenv from 'dotenv';
-import ConnectDB from './DbConnection/DB.js';
+// import mysql from 'mysql2';
+// import db from './DbConnection/DB.js';
+import { ConnectDB, getDb } from './DbConnection/DB.js';
 // import Choco_routes from './Routes/Choco_routes.js';
 
 
@@ -11,6 +13,7 @@ const port = process.env.PORT || 8000;
 app.use(express.json());
 ConnectDB();
 
+const db = getDb();
 
 // app.get(endpoint, callback)
 app.get('/', (req, res) => {
@@ -19,6 +22,7 @@ app.get('/', (req, res) => {
 
 
 
+console.log("db = ", db);
 
 // CREATE DB
 app.get('/createDb', (req, res) => {

@@ -3,21 +3,41 @@ import mysql from 'mysql2';
 
 
 // CREATE CONNECTION TO THE DATABASE
-const ConnectDB = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'niharika#28',
-    database: 'practiseDatabase',
-    // port: 6900,
-    // multipleStatements: true, // Prevent nested sql statements
-    // connectTimeout: 60 * 60 * 1000,
-    // debug: true,
-});
+let db = null;
+const ConnectDB = async () => {
+    try {
+        db = await mysql.createConnection({
+            host: 'localhost',
+            user: 'root',
+            password: 'niharika#28',
+            database: 'practiseDatabase',
+            // port: 6900,
+            // multipleStatements: true, // Prevent nested sql statements
+            // connectTimeout: 60 * 60 * 1000,
+            // debug: true,
+        });
 
-db.connect(err => {
-    if (err) throw err;
-    console.log("MySQL Database connected successfully ...");
-});
+        console.log("MySQL Database connected successfully ...");
+        // db.connect(err => {
+        //     if (err) throw err;
+        //     console.log("MySQL Database connected successfully ...");
+        // });
+    }
+
+    catch (error) {
+        console.error(`Error : ${error.message}`);
+        process.exit(1)
+    }
+}
 
 
-export default ConnectDB;
+const getDb = () => {
+    console.log("db = ", db);
+
+    return db;
+}
+
+
+
+export default db;
+export { ConnectDB, getDb };
