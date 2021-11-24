@@ -1,5 +1,5 @@
 
-import mysql from 'mysql2';
+import mysql from 'mysql2/promise';
 
 
 // CREATE CONNECTION TO THE DATABASE
@@ -58,5 +58,13 @@ const getDb = () => {
         console.log("NOT Connected");
 }
 
+const connection = await mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: 'niharika#28',
+    database: 'practiseDatabase',
+});
 
+
+export default connection;
 export { ConnectDB, getDb };
