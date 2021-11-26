@@ -3,7 +3,8 @@ import { ConnectDB, getDb } from '../DBConnection/DB.js';
 import connection from '../DBConnection/DB.js';
 import { ErrorHandler } from '../Error/error-handle.js';
 
-const db = connection;
+
+const db = await ConnectDB();
 
 
 //  @Desc   : Database Creation

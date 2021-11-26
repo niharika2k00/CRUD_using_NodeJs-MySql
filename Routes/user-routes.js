@@ -6,11 +6,11 @@ import { createDatabase, createUserTable, addNewUser, getAllUsers, getUserById, 
 
 router.get('/createDb', createDatabase);
 router.get('/createUserTable', createUserTable);
-router.get('/addUser', addNewUser);
-router.get('/allUser', getAllUsers);
-router.get('/userByParam/:id', getUserById);
-router.get('/updateUser/:id', updateUser);
-router.get('/deleteUser/:id', deleteUser);
+router.get('/new', addNewUser);
+router.get('/all', getAllUsers);
+router.get('/update/:id', updateUser);
+router.get('/delete/:id', deleteUser);
+router.get('/:id', getUserById); // applicable for id as well as other params 
 
 
 export default router;

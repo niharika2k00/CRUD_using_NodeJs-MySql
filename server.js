@@ -28,7 +28,7 @@ app.get('/', (req, res) => {
 
 
 // SYNTAX: app.use(path, callback)
-app.use('/api', userRoutes);
+app.use('/api/user', userRoutes);
 
 
 // listen() function ---->  used to bind and listen the connections on the specified host and port

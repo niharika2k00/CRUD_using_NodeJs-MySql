@@ -16,16 +16,18 @@ const ConnectDB = async () => {
             // debug: true,
         });
 
+        return db;
+
         // console.log("MySQL Database connected successfully ...");
-        /*   db.connect(err => {
-              if (err) {
-                  // throw err;
-                  console.error('error connecting: ' + err.stack);
-                  return;
-              };
-              console.log("MySQL Database connected successfully ...");
-              return db;
-          }); */
+        /*  db.connect(err => {
+             if (err) {
+                 // throw err;
+                 console.error('error connecting: ' + err.stack);
+                 return;
+             };
+             console.log("MySQL Database connected successfully ...");
+             return db;
+         }); */
     }
 
     catch (error) {
