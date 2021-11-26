@@ -15,49 +15,12 @@ const ConnectDB = async () => {
             // connectTimeout: 60 * 60 * 1000,
             // debug: true,
         });
-
         return db;
-
-        // console.log("MySQL Database connected successfully ...");
-        /*  db.connect(err => {
-             if (err) {
-                 // throw err;
-                 console.error('error connecting: ' + err.stack);
-                 return;
-             };
-             console.log("MySQL Database connected successfully ...");
-             return db;
-         }); */
     }
-
     catch (error) {
         console.error(`Error : ${error.message}`);
         process.exit(1)
     }
-}
-
-const getDb = () => {
-    const connection = mysql.createConnection({
-        host: 'localhost',
-        user: 'root',
-        password: 'niharika#28',
-        database: 'practiseDatabase',
-    });
-
-    // connection.connect(err => {
-    //     if (err) {
-    //         // throw err;
-    //         console.error('error connecting: ' + err.stack);
-    //         return;
-    //     };
-    //     console.log("MySQL Database connected successfully ...");
-    //     return connection;
-    // });
-
-    if (connection)
-        return connection;
-    else
-        console.log("NOT Connected");
 }
 
 const connection = await mysql.createConnection({
@@ -69,4 +32,4 @@ const connection = await mysql.createConnection({
 
 
 export default connection;
-export { ConnectDB, getDb };
+export { ConnectDB };

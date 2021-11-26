@@ -1,10 +1,13 @@
 
-import { ConnectDB, getDb } from '../DBConnection/DB.js';
-import connection from '../DBConnection/DB.js';
+
+import connection, { ConnectDB } from '../DBConnection/DB.js';
 import { ErrorHandler } from '../Error/error-handle.js';
 
 
-const db = await ConnectDB();
+// DATABASE ACCESS 
+// const db = await ConnectDB();
+const db = connection;
+
 
 
 //  @Desc   : Database Creation
