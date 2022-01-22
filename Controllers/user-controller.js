@@ -42,14 +42,44 @@ const addNewUser = async (req, res) => {
     try {
         // Unique ID generator
         // var uniq = 'id' + (new Date()).getTime();
-        let val = Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);             //  .toString(16) --> means convert into hexadecimal
+        let val = Math.floor((1 + Math.random()) * 0x1000000).toString(16).substring(1);             //  .toString(16) --> means convert into hexadecimal
         let uniqueId = `UID-` + val;
 
+        // Inserting Manually
+        // let query = `INSERT INTO users SET UNIQUE_ID = ? , NAME = ? ,  AGE = ? , ROLL_NO = ? , STANDARD = ? , GENDER = ? , ADDRESS = ?`;
+        // var result = await db.execute(query, [uniqueId, 'LALALAaaaa', '4', '00', 'Dev', 'Female', 'Kolkata']);
+
+
+        // Inserting from the UI/Postman
+        let data = req.body || {};
         let query = `INSERT INTO users SET UNIQUE_ID = ? , NAME = ? ,  AGE = ? , ROLL_NO = ? , STANDARD = ? , GENDER = ? , ADDRESS = ?`;
-        var result = await db.execute(query, [uniqueId, 'Marry', '21', '32', '3rd Year', 'Female', 'Kolkata']);
-        // console.log(result);
-        res.status(200);
-        res.send('New User Added Success... ');
+        var result = await db.execute(query, [
+            uniqueId,
+            data.name,
+            data.age || ' ',
+            data.roll,
+            data.standard,
+            data.gender,
+            data.address,
+            // JSON.stringify(data.tags),
+            // data.image?.trim() || defaultBannerImage,
+        ]);
+
+
+        const ResponseData = {
+            "ID": uniqueId,
+            "Name": data.name,
+            "Age": data.age || ' ',
+            "Roll No.": data.roll,
+            "Standard": data.standard,
+            "Gender": data.gender,
+            "Address": data.address,
+        };
+        // res.status(200).send('New User Added Success... ');
+        if (result)
+            res.status(200).json(ResponseData);
+        // res.status(200).json(SuccessResponse({ user }, 'User Inserted !'));
+        // else throw new CustomError('User not inserted!', 500);
     }
     catch (err) {
         console.log(err);
@@ -68,7 +98,8 @@ const getAllUsers = async (req, res) => {
         // if (err) throw err;
         console.log(rows);
         res.status(200);
-        res.send('Fetch All Users... ');
+        // res.send('Fetch All Users... ');
+        res.send(rows);
         // })
     }
     catch (err) {
@@ -103,15 +134,41 @@ const getUserById = async (req, res) => {
 //  @Route  : GET/api//updateUser/:id
 const updateUser = async (req, res) => {
     try {
-        let modify = 'Harry';
+        let modify = 'Niharika Dutta';
         console.log("req.params.id = ", req.params.id);
+
+        // METHOD - 1
         // let query = `UPDATE users SET NAME = ?  WHERE SERIAL_NO = ? `;
         // const [rows, fields] = await db.execute(query, [modify, req.params.id]);
+        // const [rows, fields] = await db.execute(query);
 
-        let query = `UPDATE users SET NAME = '${modify}' WHERE SERIAL_NO = ${req.params.id}`;
-        const [rows, fields] = await db.execute(query);
-        console.log("Updated user success...");
-        res.send("Update User Successfully...");
+
+
+        // METHOD - 2
+        // let query = `UPDATE users SET NAME = '${modify}' WHERE UNIQUE_ID = ${req.params.id}`;
+        let data = req.body || {};
+        let query = `UPDATE users SET NAME = ? ,  AGE = ? , ROLL_NO = ? , STANDARD = ? , GENDER = ? , ADDRESS = ?  WHERE SERIAL_NO = ${req.params.id}`;
+        const [rows, fields] = await db.execute(query, [
+            data.name,
+            data.age || '',
+            data.roll,
+            data.standard,
+            data.gender,
+            data.address
+        ]);
+
+        const ResponseData = {
+            "ID": req.params.id,
+            "Name": data.name,
+            "Age": data.age || ' ',
+            "Roll No.": data.roll,
+            "Standard": data.standard,
+            "Gender": data.gender,
+            "Address": data.address,
+        };
+        // res.send("Update User Successfully...");
+        if (result)
+            res.status(200).json(ResponseData);
     }
     catch (err) {
         console.log(err);
