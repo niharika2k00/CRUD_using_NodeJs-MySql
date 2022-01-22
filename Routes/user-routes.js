@@ -9,7 +9,7 @@ router.get('/createUserTable', createUserTable);
 router.get('/new', addNewUser);
 router.get('/all', getAllUsers);
 router.put('/update/:id', updateUser);
-router.get('/delete/:id', deleteUser);
+router.delete('/delete/:id', deleteUser);
 router.get('/:id', getUserById);                // applicable for id as well as other params 
 
 

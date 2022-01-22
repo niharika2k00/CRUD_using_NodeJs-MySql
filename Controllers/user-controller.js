@@ -1,13 +1,11 @@
 
+import connection, { ConnectDB } from "../DBConnection/DB.js";
+import { ErrorHandler, SuccessHandler } from "../response-handler/response-handle.js";
+import { v4 as uuid } from "uuid";
 
-import connection, { ConnectDB } from '../DBConnection/DB.js';
-import { ErrorHandler } from '../Error/error-handle.js';
-
-
-// DATABASE ACCESS 
+// DATABASE ACCESS
 // const db = await ConnectDB();
 const db = connection;
-
 
 
 //  @Desc   : Database Creation
@@ -15,11 +13,11 @@ const db = connection;
 const createDatabase = () => {
     let sql = `CREATE DATABASE practiseDatabase`;
     db.query(sql, (err, result) => {
-        if (err) throw err;
-        res.send('Database Created :) ');
         console.log("Result = ", result);
+        res.status(200).json(SuccessHandler(ResponseData, 'Database Created :)'));
+        if (err) throw err;
     });
-}
+};
 
 
 //  @Desc   : Create User Table
@@ -30,33 +28,38 @@ const createUserTable = (req, res) => {
     db.query(sqlQuery, (err, result) => {
         if (err) throw err;
         console.log("Result = ", result);
-        res.status(200);
-        res.send('User Table Created Success ');
+        res.status(200).json(SuccessHandler(ResponseData, 'User Table Created Success :)'));
     });
-}
+};
 
 
-//  @Desc   : Add New User 
-//  @Route  : GET/api/addUser
+//  @Desc   : Add New User
+//  @Route  : GET/api/user/new
 const addNewUser = async (req, res) => {
     try {
         // Unique ID generator
         // var uniq = 'id' + (new Date()).getTime();
-        let val = Math.floor((1 + Math.random()) * 0x1000000).toString(16).substring(1);             //  .toString(16) --> means convert into hexadecimal
+        let val = Math.floor((1 + Math.random()) * 0x1000000).toString(16).substring(1); //  .toString(16) --> means convert into hexadecimal
         let uniqueId = `UID-` + val;
+        let ID = uuid();
 
         // Inserting Manually
         // let query = `INSERT INTO users SET UNIQUE_ID = ? , NAME = ? ,  AGE = ? , ROLL_NO = ? , STANDARD = ? , GENDER = ? , ADDRESS = ?`;
         // var result = await db.execute(query, [uniqueId, 'LALALAaaaa', '4', '00', 'Dev', 'Female', 'Kolkata']);
 
-
         // Inserting from the UI/Postman
         let data = req.body || {};
+
+        // Throws Error
+        if (data.name.length > 0 && data.age.length > 0 && data.roll.length > 0 && data.gender.length > 0 && data.address.length > 0)
+            throw new Error("Missing fields");
+
+
         let query = `INSERT INTO users SET UNIQUE_ID = ? , NAME = ? ,  AGE = ? , ROLL_NO = ? , STANDARD = ? , GENDER = ? , ADDRESS = ?`;
         var result = await db.execute(query, [
-            uniqueId,
+            ID,
             data.name,
-            data.age || ' ',
+            data.age || " ",
             data.roll,
             data.standard,
             data.gender,
@@ -65,48 +68,45 @@ const addNewUser = async (req, res) => {
             // data.image?.trim() || defaultBannerImage,
         ]);
 
-
         const ResponseData = {
-            "ID": uniqueId,
-            "Name": data.name,
-            "Age": data.age || ' ',
+            ID: ID,
+            Name: data.name,
+            Age: data.age || " ",
             "Roll No.": data.roll,
-            "Standard": data.standard,
-            "Gender": data.gender,
-            "Address": data.address,
+            Standard: data.standard,
+            Gender: data.gender,
+            Address: data.address,
         };
-        // res.status(200).send('New User Added Success... ');
+
         if (result)
-            res.status(200).json(ResponseData);
-        // res.status(200).json(SuccessResponse({ user }, 'User Inserted !'));
-        // else throw new CustomError('User not inserted!', 500);
+            res.status(200).json(SuccessHandler(ResponseData, 'User Inserted Successfully!'));
     }
     catch (err) {
         console.log(err);
-        // throw new ErrorHandler(500, req, res, 'User not added', err);
+        res.status(500).send(ErrorHandler(500, req, res, 'User Not Inserted!'));
     }
-}
+};
 
 
 //  @Desc   :  Fetch All User
-//  @Route  : GET/api/allUser
+//  @Route  : GET/api/user/all
 const getAllUsers = async (req, res) => {
     try {
         let query = `SELECT * FROM users`;
         var [rows, fields] = await db.execute(query);
-        // var result = db.execute(query, (err, result) => {
-        // if (err) throw err;
+        /*  var result = db.execute(query, (err, result) => {
+         if (err) throw err;
+         res.send('Fetch All Users... ');
+         }) */
         console.log(rows);
-        res.status(200);
-        // res.send('Fetch All Users... ');
-        res.send(rows);
-        // })
-    }
-    catch (err) {
+        if (result)
+            res.status(200).json(SuccessHandler(rows, 'All User Fetched!'));
+
+    } catch (err) {
         console.log(err);
-        // throw new ErrorHandler(500, req, res, 'Error ', err);
+        throw new ErrorHandler(500, req, res, 'User Not Inserted!')
     }
-}
+};
 
 
 //  @Desc   : Get User by ID ( parameters)
@@ -120,77 +120,79 @@ const getUserById = async (req, res) => {
         const [rows, fields] = await db.execute(query);
 
         console.log(rows);
-        if (rows && rows.length > 0)
-            console.log(rows[0]);
-    }
-    catch (err) {
+        if (rows && rows.length > 0) console.log(rows[0]);
+    } catch (err) {
         console.log(err);
         // throw new ErrorHandler(500, req, res, 'Error ', err);
     }
-}
+};
 
 
 //  @Desc   : Update User
-//  @Route  : GET/api//updateUser/:id
+//  @Route  : GET/api/user/update/:id
 const updateUser = async (req, res) => {
     try {
-        let modify = 'Niharika Dutta';
         console.log("req.params.id = ", req.params.id);
+        const { name, age, roll, standard, gender, address } = req.body; //  Destructure
 
         // METHOD - 1
-        // let query = `UPDATE users SET NAME = ?  WHERE SERIAL_NO = ? `;
+        //   let modify = "Niharika Dutta";
+        // let query = `UPDATE users SET NAME = ?  WHERE SERIAL_NO = ?`;
         // const [rows, fields] = await db.execute(query, [modify, req.params.id]);
-        // const [rows, fields] = await db.execute(query);
-
 
 
         // METHOD - 2
         // let query = `UPDATE users SET NAME = '${modify}' WHERE UNIQUE_ID = ${req.params.id}`;
-        let data = req.body || {};
-        let query = `UPDATE users SET NAME = ? ,  AGE = ? , ROLL_NO = ? , STANDARD = ? , GENDER = ? , ADDRESS = ?  WHERE SERIAL_NO = ${req.params.id}`;
-        const [rows, fields] = await db.execute(query, [
-            data.name,
-            data.age || '',
-            data.roll,
-            data.standard,
-            data.gender,
-            data.address
+        if (name.length > 0 && age.length > 0 && roll.length > 0 && gender.length > 0 && address.length > 0)
+            throw new Error("Missing fields");
+
+        let query = `UPDATE users SET NAME = ? ,  AGE = ? , ROLL_NO = ? , STANDARD = ? , GENDER = ? , ADDRESS = ?  WHERE UNIQUE_ID = ?`;
+        const [result, fields] = await db.execute(query, [
+            req.params.id,
+            name,
+            age || "",
+            roll,
+            standard,
+            gender,
+            address,
         ]);
 
         const ResponseData = {
-            "ID": req.params.id,
-            "Name": data.name,
-            "Age": data.age || ' ',
-            "Roll No.": data.roll,
-            "Standard": data.standard,
-            "Gender": data.gender,
-            "Address": data.address,
+            ID: req.params.id,
+            Name: name,
+            Age: age || " ",
+            "Roll No.": roll,
+            Standard: standard,
+            Gender: gender,
+            Address: address,
         };
-        // res.send("Update User Successfully...");
         if (result)
-            res.status(200).json(ResponseData);
+            res.status(200).json(SuccessHandler(ResponseData, 'User Updated Successfully!'));
     }
     catch (err) {
         console.log(err);
-        // throw new ErrorHandler(500, req, res, 'Error ', err);
+        res.status(500).send(ErrorHandler(500, req, res, 'User Not Updated!'));
     }
-}
+};
 
 
 //  @Desc   : Delete User
-//  @Route  : GET/api/deleteUser/:id
+//  @Route  : GET/api/user/delete/:id
 const deleteUser = async (req, res) => {
     try {
-        let query = `DELETE FROM users WHERE SERIAL_NO = ${req.params.id}`;
+        let query = `DELETE FROM users WHERE UNIQUE_ID = "${req.params.id}"`;
         await db.execute(query);
-        res.send("Delete User Successfully...");
+
+        if (!req.params.id)
+            throw new Error("Missing ID");
+
+        res.status(200).json(SuccessHandler(null, 'User Deleted Successfully!'));
     }
     catch (err) {
         console.log(err);
-        // throw new ErrorHandler(500, req, res, 'Error ', err);
+        res.status(500).send(ErrorHandler(500, req, res, 'User Not Deleted!'));
     }
-}
+};
 
 
-
-export { createDatabase, createUserTable, addNewUser, getAllUsers, getUserById, updateUser, deleteUser };
+export { createDatabase, createUserTable, addNewUser, getAllUsers, getUserById, updateUser, deleteUser, };
