@@ -1,6 +1,6 @@
 
 import connection, { ConnectDB } from "../DBConnection/DB.js";
-import { ErrorHandler, SuccessHandler } from "../response-handler/response-handle.js";
+import { ErrorHandler, SuccessHandler } from "../ResponseHandler/response-handle.js";
 import { v4 as uuid } from "uuid";
 
 // DATABASE ACCESS
@@ -23,7 +23,7 @@ const createDatabase = () => {
 //  @Desc   : Create User Table
 //  @Route  : GET/api/createUserTable
 const createUserTable = (req, res) => {
-    let sqlQuery = `CREATE TABLE users ( SERIAL_NO int AUTO_INCREMENT, UNIQUE_ID VARCHAR(255) NOT NULL , NAME VARCHAR(255), AGE VARCHAR(255), ROLL_NO VARCHAR(255), STANDARD VARCHAR(255) , GENDER VARCHAR(255) , ADDRESS VARCHAR(255) ,  PRIMARY KEY(SERIAL_NO) )`;
+    let sqlQuery = `CREATE TABLE users ( SERIAL_NO int AUTO_INCREMENT, UNIQUE_ID VARCHAR(255) NOT NULL , NAME VARCHAR(255), AGE VARCHAR(255), ROLL_NO VARCHAR(255), STANDARD VARCHAR(255) , GENDER VARCHAR(255) , ADDRESS VARCHAR(255) ,  PRIMARY KEY(SERIAL_NO) )`;  // primary_key = SERIAL_NOy
     // var response = await db.execute(sqlQuery);
     db.query(sqlQuery, (err, result) => {
         if (err) throw err;
@@ -99,7 +99,7 @@ const getAllUsers = async (req, res) => {
          res.send('Fetch All Users... ');
          }) */
         console.log(rows);
-        if (result)
+        if (rows)
             res.status(200).json(SuccessHandler(rows, 'All User Fetched!'));
 
     } catch (err) {
@@ -110,7 +110,7 @@ const getAllUsers = async (req, res) => {
 
 
 //  @Desc   : Get User by ID ( parameters)
-//  @Route  : GET/api//userByParam/:id
+//  @Route  : GET/api/user/:id
 const getUserById = async (req, res) => {
     try {
         // let query = `SELECT * FROM users WHERE NAME = ?`;

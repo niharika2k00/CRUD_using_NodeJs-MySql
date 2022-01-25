@@ -6,7 +6,7 @@ import { createDatabase, createUserTable, addNewUser, getAllUsers, getUserById, 
 
 router.get('/createDb', createDatabase);
 router.get('/createUserTable', createUserTable);
-router.get('/new', addNewUser);
+router.post('/new', addNewUser);
 router.get('/all', getAllUsers);
 router.put('/update/:id', updateUser);
 router.delete('/delete/:id', deleteUser);

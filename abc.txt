@@ -1,5 +1,43 @@
 
-res.send("Created Success");
-res.status(200);
+ res.send("Created Success");
+ res.status(200);
  res.status(statusCode).json();
  res.status(200).send('New User Added Success... ');
+
+
+ if (condition)
+    throw new Error("Missing Field");
+
+  Both req and res are made available to us by the Express framework
+
+
+  JSON.stringify(data.image)       -->   When data is sent to a server it must be sent as a STRING. 
+                                         JSON.stringify() method converts JavaScript data to a JSON-formatted string.
+                                         
+  data.image?.trim() || defaultBannerImage
+
+
+
+    -------------------- ||   Async - Await Function  || --------------------
+  let hello = async function() { return "Hello" };
+  hello();
+
+  let hello = async () => "Hello";
+
+
+
+     -------------------- ||        MULTER         || --------------------
+    Multer : Adds a body object and a file or files object to the request object. The body object contains the values of the text fields of the form, 
+                the file or files object contains the files uploaded via the form.
+
+                enctype="multipart/form-data" in your form.
+
+
+     # router.post('/upload',  multerUpload.array('image'), imageUploadController);
+
+     # app.post('/upload', upload.single('avatar'), () => {} ) 
+
+     # app.post('/upload', upload.array('photos', 12),  () => {} )      //  Can only upload up to 12 files - LIMIT
+
+     # const Multiple = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
+        app.post('/upload', Multiple, () => {} )
