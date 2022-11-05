@@ -10,19 +10,28 @@
 
   Both req and res are made available to us by the Express framework
 
+  
+  const text = '["Ford", "BMW", "Audi", "Fiat"]';    --->   JSON.parse() to convert text/string into a JavaScript Array / Object
+  const myArr = JSON.parse(text);
 
-  JSON.stringify(data.image)       -->   When data is sent to a server it must be sent as a STRING. 
+  var params = JSON.parse(JSON.stringify(defaultParams));
+
+  JSON.stringify(arr / obj)       -->   When data is sent to a server it must be sent as a STRING. 
                                          JSON.stringify() method converts JavaScript data to a JSON-formatted string.
                                          
   data.image?.trim() || defaultBannerImage
 
+  
 
 
     -------------------- ||   Async - Await Function  || --------------------
-  let hello = async function() { return "Hello" };
-  hello();
+   let hello = async function() { return "Hello" };
+   hello();
 
-  let hello = async () => "Hello";
+   let hello = async () => "Hello";
+
+   ASYNC - AWAIT  ==>  await keyword tells the function to "WAIT" until its Promise resolves before executing the next line
+
 
 
 
@@ -41,3 +50,12 @@
 
      # const Multiple = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
         app.post('/upload', Multiple, () => {} )
+
+
+
+
+    sqlQuery = `CREATE TABLE Hotel_Images ( imageId VARCHAR(255) NOT NULL, 
+                                                 abc VARCHAR(255) NOT NULL,
+                                                 imageUrl VARCHAR(255) NOT NULL,
+                                                 CONSTRAINT roomImage_Pk PRIMARY KEY(imageId) ,
+                                                 CONSTRAINT roomImage_Fk FOREIGN KEY(abc) REFERENCES Room(roomId) )`;     //  means abc in this TableB ==  roomId in TableA
