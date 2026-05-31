@@ -1,8 +1,10 @@
-import mysql from "mysql2";
+import mysql from "mysql2/promise";
 
 // Method 1: create connection pool
+// mysql.createPool({...}).promise();
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
@@ -13,14 +15,17 @@ const pool = mysql.createPool({
 });
 
 // Method 2: create connection
-const connection = mysql.createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  connectTimeout: 60000,
-  connectionLimit: 5,
-});
+// const connection = mysql.createConnection({
+//   host: process.env.DB_HOST,
+//   port: process.env.DB_PORT,
+//   user: process.env.DB_USER,
+//   password: process.env.DB_PASSWORD,
+//   database: process.env.DB_NAME,
+//   connectTimeout: 60000,
+//   connectionLimit: 5,
+// });
 
 export default pool;
-export { connection };
+// export { connection };
+
+// ⚠️ DB connection runs immediately on import
