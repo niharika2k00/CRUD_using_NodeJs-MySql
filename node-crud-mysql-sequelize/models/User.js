@@ -1,6 +1,7 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
 
+// sequelize.define(modelName, attributes, options)
 const User = sequelize.define(
   "User",
   {
@@ -30,3 +31,5 @@ const User = sequelize.define(
 );
 
 export default User;
+
+//  timestamps: true (default) — adds createdAt, updatedAt

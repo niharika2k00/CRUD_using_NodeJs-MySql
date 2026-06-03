@@ -34,6 +34,24 @@ const createUser = async (req, res) => {
   }
 };
 
+// @route: POST /api/users/bulk
+const bulkCreateUsers = async (req, res) => {
+  try {
+    const { users } = req.body;
+    if (!Array.isArray(users) || users.length === 0) {
+      return res.status(400).json({ message: "users array required" });
+    }
+    const created = await User.bulkCreate(users, {
+      validate: true,
+      returning: true,
+    });
+    const safe = created.map(({ dataValues: { password, ...rest } }) => rest);
+    res.status(201).json(safe);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 // @route: PUT /api/users/:id
 const updateUser = async (req, res) => {
   try {
@@ -63,4 +81,4 @@ const deleteUser = async (req, res) => {
   }
 };
 
-export { getAllUsers, getUser, createUser, updateUser, deleteUser };
+export { getAllUsers, getUser, createUser, bulkCreateUsers, updateUser, deleteUser };

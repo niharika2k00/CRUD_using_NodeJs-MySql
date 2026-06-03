@@ -30,8 +30,12 @@ CREATE TABLE courses (
 CREATE TABLE students (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
-  email VARCHAR(100) NOT NULL UNIQUE
+  email VARCHAR(100) NOT NULL UNIQUE,
+  password VARCHAR(255) NOT NULL
 );
+
+-- if students table already exists, just add the column:
+ALTER TABLE students ADD COLUMN password VARCHAR(255) NOT NULL;
 
 -- junction table | composite key, no separate id
 CREATE TABLE enrollments (

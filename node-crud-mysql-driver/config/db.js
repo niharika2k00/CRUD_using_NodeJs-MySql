@@ -28,4 +28,4 @@ const pool = mysql.createPool({
 export default pool;
 // export { connection };
 
-// ⚠️ DB connection runs immediately on import
+// ⚠️ DB connection [TCP] runs immediately on import

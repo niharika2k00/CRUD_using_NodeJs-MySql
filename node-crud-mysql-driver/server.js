@@ -2,8 +2,9 @@ import dotenv from "dotenv/config";
 // dotenv.config();
 import express from "express";
 import studentRoutes from "./routes/studentRoutes.js";
-import instructorRoutes from "./routes/instructorRoutes.js";
+// import instructorRoutes from "./routes/instructorRoutes.js";
 import courseRoutes from "./routes/courseRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 
 const app = express();
 app.use(express.json());
@@ -15,8 +16,9 @@ app.get("/", (req, res) => {
 });
 
 // app.use(path, callback)
+app.use("/api/auth", authRoutes);
 app.use("/api/students", studentRoutes);
-app.use("/api/instructors", instructorRoutes);
+// app.use("/api/instructors", instructorRoutes);
 app.use("/api/courses", courseRoutes);
 
 // listen() function ---->  used to bind and listen the connections on the specified host and port
